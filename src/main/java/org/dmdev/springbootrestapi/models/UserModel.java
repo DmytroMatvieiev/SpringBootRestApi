@@ -17,16 +17,14 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserModel {
     private Long id;
-    @Email
+    @NotNull
     private String email;
     @NotNull
     private String firstname;
     @NotNull
     private String lastname;
-    @Adult
+    @NotNull
     private LocalDate birthdate;
-    @NotNull
     private String address;
-    @NotNull
     private long number;
 }

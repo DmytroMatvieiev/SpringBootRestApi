@@ -38,13 +38,17 @@ import static org.mockito.Mockito.when;
 public class UserControllerTest {
     private static final User USER_EXAMPLE = User.builder()
             .id(1L)
+            .firstname("Dima")
+            .lastname("Matvieiev")
             .email("best@email.com")
-            .birthdate(LocalDate.of(1994, 12, 12))
+            .birthdate(LocalDate.of(2004, 2, 24))
             .build();
     private static final UserModel USER_MODEL_EXAMPLE = UserModel.builder()
             .id(1L)
+            .firstname("Dima")
+            .lastname("Matvieiev")
             .email("best@email.com")
-            .birthdate(LocalDate.of(1994, 12, 12))
+            .birthdate(LocalDate.of(2004, 2, 24))
             .build();
 
     @Autowired
@@ -124,12 +128,12 @@ public class UserControllerTest {
 
     @Test
     public void updateNotExistUser_whenUserNotFount_thenCorrect() {
-        when(repo.findById(1L)).thenReturn(Optional.of(USER_EXAMPLE));
+        when(repo.findById(1L)).thenReturn(Optional.empty());
         when(repo.save(USER_EXAMPLE)).thenReturn(USER_EXAMPLE);
 
         ResponseModel rm = ResponseModel.builder()
                 .status(ResponseModel.FAIL_STATUS)
-                .message(String.format("User #%d Not Found", 2L))
+                .message(String.format("User #%d Not Found", 1L))
                 .build();
 
         var re = userController.update(USER_MODEL_EXAMPLE);
@@ -147,8 +151,10 @@ public class UserControllerTest {
                 .build();
         User newUser = User.builder()
                 .id(1L)
-                .email("12312")
-                .birthdate(LocalDate.of(1994, 12, 12))
+                .firstname("Dima")
+                .lastname("Matvieiev")
+                .email("best@email.com")
+                .birthdate(LocalDate.of(2004, 2, 24))
                 .build();
 
         when(repo.findById(1L)).thenReturn(Optional.of(newUser));

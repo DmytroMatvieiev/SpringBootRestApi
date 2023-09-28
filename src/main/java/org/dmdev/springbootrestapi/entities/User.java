@@ -17,13 +17,13 @@ import java.time.LocalDate;
 @Builder
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false,
             unique = true,
             length = 64)
+    @Email
     private String email;
     @Column(nullable = false,
             length = 32)
@@ -32,6 +32,7 @@ public class User {
             length = 32)
     private String lastname;
     @Column(nullable = false)
+    @Adult
     private LocalDate birthdate;
     private String address;
     private long number;
