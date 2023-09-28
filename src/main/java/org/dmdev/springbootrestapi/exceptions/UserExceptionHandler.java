@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import org.dmdev.springbootrestapi.models.ResponseModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -11,8 +12,8 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class UserExceptionHandler {
 
-    @ExceptionHandler(IllegalDateRange.class)
-    public ResponseEntity<ResponseModel> handleIllegalDateRange(IllegalDateRange ex, WebRequest request){
+    @ExceptionHandler(IllegalDateRangeException.class)
+    public ResponseEntity<ResponseModel> handleIllegalDateRange(IllegalDateRangeException ex, WebRequest request){
         ResponseModel responseModel = ResponseModel.builder()
                 .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
@@ -20,8 +21,8 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(IllegalBirthdate.class)
-    public ResponseEntity<ResponseModel> handleIllegalBirthdate(IllegalBirthdate ex, WebRequest request){
+    @ExceptionHandler(IllegalBirthdateException.class)
+    public ResponseEntity<ResponseModel> handleIllegalBirthdateException(IllegalBirthdateException ex, WebRequest request){
         ResponseModel responseModel = ResponseModel.builder()
                 .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
@@ -30,10 +31,19 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ResponseModel> handleHibernateValidation(IllegalBirthdate ex, WebRequest request){
+    public ResponseEntity<ResponseModel> handleHibernateValidationException(IllegalBirthdateException ex, WebRequest request){
         ResponseModel responseModel = ResponseModel.builder()
                 .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseModel> handleIllegalEmailFormatException(MethodArgumentNotValidException ex, WebRequest request){
+        ResponseModel responseModel = ResponseModel.builder()
+                .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
+                .message("Email format is not valid")
                 .build();
         return new ResponseEntity<>(responseModel, HttpStatus.BAD_REQUEST);
     }

@@ -1,13 +1,8 @@
 package org.dmdev.springbootrestapi.services;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 import org.dmdev.springbootrestapi.entities.User;
-import org.dmdev.springbootrestapi.exceptions.IllegalBirthdate;
-import org.dmdev.springbootrestapi.exceptions.IllegalDateRange;
+import org.dmdev.springbootrestapi.exceptions.IllegalDateRangeException;
 import org.dmdev.springbootrestapi.models.ResponseModel;
 import org.dmdev.springbootrestapi.models.UserModel;
 import org.dmdev.springbootrestapi.repositories.UserDao;
@@ -19,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -48,6 +42,7 @@ public class UserService implements IUserService {
                 = userDao.findById(userModel.getId());
         if (userOptional.isPresent()) {
             User user = User.builder()
+                    .id(userModel.getId())
                     .email(userModel.getEmail())
                     .firstname(userModel.getFirstname())
                     .lastname(userModel.getLastname())
@@ -126,7 +121,7 @@ public class UserService implements IUserService {
 
     public ResponseModel getInBirthRange(LocalDate from, LocalDate to){
         if(from.isAfter(to)){
-            throw new IllegalDateRange("The start date cannot be later than the end date.");
+            throw new IllegalDateRangeException("The start date cannot be later than the end date.");
         }
         List<User> users = userDao.findInBirthdateRange(from, to);
         List<UserModel> userModels =

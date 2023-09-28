@@ -1,11 +1,10 @@
-package org.dmdev.springbootrestapi.models.validations;
+package org.dmdev.springbootrestapi.models.validations.Validators;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.Getter;
-import org.dmdev.springbootrestapi.exceptions.IllegalBirthdate;
+import org.dmdev.springbootrestapi.exceptions.IllegalBirthdateException;
+import org.dmdev.springbootrestapi.models.validations.Adult;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -19,7 +18,7 @@ public class AdultValidator
     @Override
     public boolean isValid(LocalDate value, ConstraintValidatorContext context) {
         if(Period.between(value, LocalDate.now()).getYears() <= requiredAge)
-            throw new IllegalBirthdate("Users under the age of 18 are not allowed to register");
+            throw new IllegalBirthdateException("Users under the age of 18 are not allowed to register");
         return true;
     }
 }

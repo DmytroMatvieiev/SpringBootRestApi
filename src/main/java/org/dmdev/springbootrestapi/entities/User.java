@@ -1,10 +1,12 @@
 package org.dmdev.springbootrestapi.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dmdev.springbootrestapi.models.validations.Adult;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
@@ -31,8 +33,6 @@ public class User {
     private String lastname;
     @Column(nullable = false)
     private LocalDate birthdate;
-    @Column(nullable = false)
     private String address;
-    @Column(nullable = false)
     private long number;
 }

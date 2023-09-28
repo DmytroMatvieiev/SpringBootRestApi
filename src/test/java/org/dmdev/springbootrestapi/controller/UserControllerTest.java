@@ -3,11 +3,10 @@ package org.dmdev.springbootrestapi.controller;
 import jakarta.validation.ValidationException;
 import org.dmdev.springbootrestapi.controllers.UserController;
 import org.dmdev.springbootrestapi.entities.User;
-import org.dmdev.springbootrestapi.exceptions.IllegalDateRange;
+import org.dmdev.springbootrestapi.exceptions.IllegalDateRangeException;
 import org.dmdev.springbootrestapi.exceptions.UserExceptionHandler;
 import org.dmdev.springbootrestapi.models.ResponseModel;
 import org.dmdev.springbootrestapi.models.UserModel;
-import org.dmdev.springbootrestapi.models.validations.AdultValidator;
 import org.dmdev.springbootrestapi.repositories.UserDao;
 import org.dmdev.springbootrestapi.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
@@ -37,16 +35,15 @@ import static org.mockito.Mockito.when;
 @WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(UserExceptionHandler.class)
 public class UserControllerTest {
     private static final User USER_EXAMPLE = User.builder()
             .id(1L)
-            .email("12312")
+            .email("best@email.com")
             .birthdate(LocalDate.of(1994, 12, 12))
             .build();
     private static final UserModel USER_MODEL_EXAMPLE = UserModel.builder()
             .id(1L)
-            .email("12312")
+            .email("best@email.com")
             .birthdate(LocalDate.of(1994, 12, 12))
             .build();
 
@@ -58,9 +55,6 @@ public class UserControllerTest {
 
     @MockBean
     private UserDao repo;
-
-    @MockBean
-    private UserExceptionHandler userExceptionHandler;
 
     @Autowired
     UserController userController;
@@ -123,7 +117,7 @@ public class UserControllerTest {
                 .message(String.format("User %s Updated", USER_EXAMPLE.getFirstname()))
                 .build();
 
-        var re = userController.update(1L, USER_MODEL_EXAMPLE);
+        var re = userController.update(USER_MODEL_EXAMPLE);
 
         assertEquals(rm, re.getBody());
     }
@@ -138,7 +132,7 @@ public class UserControllerTest {
                 .message(String.format("User #%d Not Found", 2L))
                 .build();
 
-        var re = userController.update(2L, USER_MODEL_EXAMPLE);
+        var re = userController.update(USER_MODEL_EXAMPLE);
 
 
         assertEquals(rm, re.getBody());
@@ -146,19 +140,19 @@ public class UserControllerTest {
 
     @Test
     public void updateEmail_whenResponseModelReturned_thenCorrect(){
-        String newEmail = "new@gmail";
+        String newEmail = "new@email.com";
         ResponseModel rm = ResponseModel.builder()
                 .status(ResponseModel.SUCCESS_STATUS)
                 .message(String.format("User %s Email Updated", USER_EXAMPLE.getFirstname()))
                 .build();
-        User USER_NEW = User.builder()
+        User newUser = User.builder()
                 .id(1L)
                 .email("12312")
                 .birthdate(LocalDate.of(1994, 12, 12))
                 .build();
 
-        when(repo.findById(1L)).thenReturn(Optional.of(USER_NEW));
-        when(repo.save(USER_NEW)).thenReturn(USER_NEW);
+        when(repo.findById(1L)).thenReturn(Optional.of(newUser));
+        when(repo.save(newUser)).thenReturn(newUser);
 
         var re = userController.updateEmail(1L, newEmail);
 
@@ -216,7 +210,7 @@ public class UserControllerTest {
         LocalDate to = LocalDate.of(1994, 12, 12);
         LocalDate from = LocalDate.of(2000, 12, 12);
 
-        assertThrows(IllegalDateRange.class, () -> userController.getInBirthRange(from, to));
+        assertThrows(IllegalDateRangeException.class, () -> userController.getInBirthRange(from, to));
 
 
     }

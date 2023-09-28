@@ -29,14 +29,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
-    @PutMapping("/users")
+    @PostMapping("/users")
     public ResponseEntity<ResponseModel> create(@RequestBody @Valid UserModel userModel) {
         return new ResponseEntity<>(userService.create(userModel), HttpStatus.CREATED);
     }
 
-    @PostMapping("/users/{id}")
-    public ResponseEntity<ResponseModel> update(@PathVariable Long id, @RequestBody UserModel userModel){
-        userModel.setId(id);
+    @PutMapping("/users")
+    public ResponseEntity<ResponseModel> update( @RequestBody @Valid UserModel userModel){
         return new ResponseEntity<>(userService.update(userModel), HttpStatus.OK);
     }
 
