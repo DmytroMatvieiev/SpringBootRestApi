@@ -91,24 +91,18 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createYoungUser_whenIllegalBirthdateExceptionThrows_thenCorrect() {
+    public void createYoungUser_whenValidationExceptionThrows_thenCorrect() {
         final UserModel YOUNG_USER_MODEL_EXAMPLE = UserModel.builder()
                 .id(1L)
-                .email("12312")
-                .birthdate(LocalDate.of(2010, 12, 12))
+                .firstname("Dima")
+                .lastname("Matvieiev")
+                .email("best@email.com")
+                .birthdate(LocalDate.of(2010, 2, 24))
                 .build();
-
-        ResponseModel rm = ResponseModel.builder()
-                .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
-                .message("Users under the age of 18 are not allowed to register")
-                .build();
-//        when(service.create(YOUNG_USER_MODEL_EXAMPLE)).thenReturn(rm);
 
         assertThrows(ValidationException.class, () ->
             userController.create(YOUNG_USER_MODEL_EXAMPLE)
         );
-
-
     }
 
     @Test
@@ -209,16 +203,10 @@ public class UserControllerTest {
 
     @Test
     public void getInBirthRange_whenValidationExceptionThrows_thenCorrect() {
-        ResponseModel rm = ResponseModel.builder()
-                .status("Bad Request: " + HttpStatus.BAD_REQUEST.value())
-                .message("The start date cannot be later than the end date.")
-                .build();
         LocalDate to = LocalDate.of(1994, 12, 12);
         LocalDate from = LocalDate.of(2000, 12, 12);
 
         assertThrows(IllegalDateRangeException.class, () -> userController.getInBirthRange(from, to));
-
-
     }
 
 }

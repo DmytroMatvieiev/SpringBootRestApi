@@ -18,12 +18,14 @@ import java.time.LocalDate;
 public class UserModel {
     private Long id;
     @NotNull
+    @Email
     private String email;
     @NotNull
     private String firstname;
     @NotNull
     private String lastname;
     @NotNull
+    @Adult
     private LocalDate birthdate;
     private String address;
     private long number;
